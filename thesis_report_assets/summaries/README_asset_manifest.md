@@ -30,7 +30,7 @@ No placeholder assets were required.
 ## Notes And Assumptions
 
 - `fig_execution_equity_curve_final_model.png` uses the strongest neural model from the final overlap-safe benchmark, `xLSTM`, averaged across seeds.
-- `fig_carry_retuned_tradeoff.png` is the main trade-off figure for the thesis and compares standardized-path RMSE with tuned-threshold net PnL on the retuned carry benchmark, including the plain LSTM control, the attention-pooled LSTM control, the transformer control, the xLSTM winner, and the strongest baselines.
+- `fig_carry_retuned_tradeoff.png` is the main trade-off figure for the thesis and compares standardized-path RMSE with tuned-threshold net PnL on the retuned carry benchmark, showing the main frontier cluster of the strongest baselines, the transformer control, and the xLSTM winner. The vanilla LSTM and attention-pooled LSTM controls are omitted from this figure because they are outliers on the plotted scale.
 - `fig_xlstm_thresholded_equity_curve.png` is copied from the best-threshold xLSTM carry benchmark (`b2/e256`, threshold `0.0050`) and is the main equity-curve figure referenced by `thesis_rewritten.tex`.
 - `fig_svi_carry_fit_mix.png` summarizes the fit-method mix in the carry-plus-SVI panel and is used in the rewritten SVI sensitivity section.
 - `fig_bootstrap_net_pnl_ci.png` plots 95% circular block-bootstrap confidence intervals for tuned net PnL on the final retuned-carry economic frontier, including the transformer control alongside the strongest baseline cluster, and is used in `thesis.tex`.

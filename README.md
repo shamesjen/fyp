@@ -1,82 +1,96 @@
-# Implied-Volatility Curve Forecasting MVP
+# Intraday Implied-Volatility Curve Forecasting for Options Mispricing Detection
 
-This repo is a practical first implementation of the FYP project described in the CA report: forecast the next-step implied-volatility curve on a fixed moneyness grid, compare forecast IV against current market IV, and translate that IV edge into a simple vega-style mispricing signal. The report targets intraday, execution-aware research; this MVP intentionally starts with a cleaner daily SPY setup so the full pipeline is runnable end to end before adding intraday data, richer microstructure features, and more advanced curve constraints.
+Repository for the B.Comp. Final Year Project dissertation at the School of Computing, National University of Singapore.
 
-## Why This MVP Looks Like This
+GitHub repository: <https://github.com/shamesjen/fyp>
 
-- `SPY` is used first because it is highly liquid, operationally simpler than index options, and a practical starting point for data and model debugging.
-- `Alpaca` is the default options provider in code because it is one of the more accessible free options APIs.
-- `yfinance` is used only for underlying OHLCV data, not options data.
-- The repo includes a prepared sample IV panel so the full demo still runs when Alpaca historical coverage is insufficient or credentials/network are unavailable.
+## What This Repository Contains
 
-## Research Objective
+This repository contains:
 
-The project framing follows the CA report:
+- the final dissertation source: [thesis.tex](thesis.tex)
+- the thesis figure/table asset pack: [thesis_report_assets/](thesis_report_assets/)
+- the experiment code used to build datasets, train models, run walk-forward benchmarks, and generate reports
+- the saved experiment artifacts and markdown reports under [artifacts/](artifacts/)
 
-- Target: next-step IV curve on a fixed moneyness grid for one chosen maturity bucket.
-- Compare forecast IV vs current IV to estimate mispricing.
-- Convert IV edge into a simple price-edge signal with vega-style logic.
-- Benchmark against persistence, AR(1), factor VAR, GARCH-style ATM shift, MLP, and a simple LSTM.
+The project studies **intraday forecasting of the SPY implied-volatility smile** on a fixed seven-point moneyness grid in the `30 +/- 7 DTE` bucket. Forecasts are evaluated both statistically and economically under:
 
-The report also motivates later upgrades that are only stubbed or left as TODOs here:
+- overlap-safe walk-forward retraining
+- standardized stitched out-of-sample comparison
+- execution-aware backtesting
+- threshold-swept strategy evaluation
 
-- Intraday snapshots instead of daily data
-- SVI smoothing / no-arbitrage constraints
-- Execution-aware filtering with depth, spreads, and latency
-- Multi-maturity modeling
-- Provider upgrades beyond Alpaca
+## Final Thesis Result
 
-## Architecture
+The final thesis is centered on the **retuned 5-minute carry-forward benchmark**.
 
-The modeling code depends on a fixed IV panel interface, not on a vendor-specific raw schema.
+Main benchmark characteristics:
 
-```text
-yfinance underlying data  ----\
-                               -> daily panel builder -> feature engineering -> sequence dataset -> models/eval/backtest
-Alpaca options history   ----/
-prepared CSV/parquet panel --/
-```
+- underlying: `SPY`
+- frequency: `5-minute`
+- target: fixed seven-node IV curve
+- maturity bucket: `30 +/- 7` calendar days to expiry
+- lookback: `seq_len = 12`
+- horizon: `1` bar ahead
+- dataset size: `50,019` supervised samples
+- validation design: `15` expanding walk-forward folds with overlap-safe frontier stitching
 
-Provider abstraction:
+Main findings used in the thesis:
 
-- `src/data/yfinance_underlying.py`: underlying OHLCV provider
-- `src/data/alpaca_options.py`: default options provider
-- `src/data/csv_panel_loader.py`: prepared-panel fallback
-- `src/data/daily_panel_builder.py`: chain-level rows to fixed-grid IV curves
+- **Best statistical model:** `ElasticNet`
+  - RMSE: `0.010886`
+- **Best tuned economic model:** `xLSTM b2/e256`
+  - tuned net PnL: `0.121296`
+  - tuned Sharpe: `3.876124`
+- **Important control result:** the transformer encoder is statistically strong
+  - RMSE: `0.013660`
+  - tuned net PnL: `0.103707`
+  - but it remains economically weaker than the xLSTM
 
-The rest of the pipeline consumes the same processed dataset regardless of where the IV panel came from.
+The final interpretation is deliberately narrow:
 
-## Repo Navigation
+- classical baselines remain very strong
+- xLSTM leads economically on the completed benchmark
+- the economic lead is **real but narrow**
+- statistical accuracy and monetizable signal quality diverge materially on this problem
 
-The original experiment files are preserved in place, but the repo now also includes grouped navigation layers:
+## Where To Start
 
-- [artifacts/README.md](artifacts/README.md): canonical experiment outputs grouped by research phase
-- [configs/README.md](configs/README.md): configs grouped by stage
-- [scripts/README.md](scripts/README.md): scripts grouped by purpose
+If you only need the submission materials, start here:
 
-If you only want the final thesis result set, start in:
+- thesis source: [thesis.tex](thesis.tex)
+- thesis assets: [thesis_report_assets/](thesis_report_assets/)
+- final retuned carry benchmark report: [artifacts/reports/carry_model_family_retuned_oldbudget.md](artifacts/reports/carry_model_family_retuned_oldbudget.md)
+- threshold-swept economic comparison: [artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/threshold_sweep_summary.md](artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/threshold_sweep_summary.md)
+- best xLSTM vs all competitors appendix pack: [artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md](artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md)
+- bootstrap significance report: [artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md](artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md)
 
-- `artifacts/current_final/`
+The repo also contains earlier daily, hourly, and pre-retune 5-minute experiments. Those are preserved for traceability, but the thesis argument is built around the retuned carry benchmark above.
 
-## Repo Layout
+## Repository Layout
 
 ```text
 README.md
 requirements.txt
 .env.example
-configs/
-data/
-notebooks/
-src/
-scripts/
-tests/
+src/                    Core data, model, training, and evaluation modules
+scripts/                Executable experiment runners and reporting scripts
+configs/                YAML configs for datasets, training runs, and reports
+data/                   Raw, processed, and sample data artifacts
+artifacts/              Saved experiment outputs and markdown reports
+thesis_report_assets/   Figures, tables, and asset manifests for the dissertation
+thesis.tex              Final dissertation source
 ```
 
-Outputs are written under `artifacts/`.
+Useful navigation files:
 
-## Setup
+- [artifacts/README.md](artifacts/README.md)
+- [configs/README.md](configs/README.md)
+- [scripts/README.md](scripts/README.md)
 
-1. Create the virtual environment:
+## Environment Setup
+
+Create the virtual environment and install dependencies:
 
 ```bash
 python3 -m venv .venv
@@ -84,185 +98,192 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-2. Create `.env` in the repo root:
+If you want to rebuild datasets from raw Alpaca/yfinance inputs, create `.env` first:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Put your Alpaca credentials in `.env` using these exact names:
+and provide:
 
 ```bash
 ALPACA_KEY=your_key_here
 ALPACA_SECRET=your_secret_here
 ```
 
-`.env` is already ignored by git. The Alpaca client automatically reads `ALPACA_KEY` and `ALPACA_SECRET` through `python-dotenv`. If either variable is missing, the provider raises a clear error and the build script can fall back to the bundled sample panel if configured.
+Most saved thesis artifacts can be inspected without credentials. Credentials are only needed for raw-market-data rebuilds.
 
-## End-to-End Demo
+## Thesis-Facing Reproducibility Path
 
-Offline-safe demo path:
+The commands below reproduce the main thesis benchmark and its final robustness layers.
 
-```bash
-python scripts/build_daily_dataset.py --config configs/data_spy_daily.yaml
-python scripts/run_baselines.py --config configs/train_baselines.yaml
-python scripts/run_lstm.py --config configs/train_lstm.yaml
-python scripts/run_backtest_demo.py --config configs/backtest_demo.yaml
-```
-
-This works even without live Alpaca history because `configs/data_spy_daily.yaml` is set to:
-
-- try `yfinance` first for underlying data
-- try `Alpaca` first for options data
-- fall back to `data/samples/spy_underlying_sample.csv`
-- fall back to `data/samples/spy_iv_panel_sample.csv`
-
-Real-data path:
+### 1. Run the retuned carry benchmark
 
 ```bash
-python scripts/download_underlying_data.py --config configs/data_spy_daily.yaml
-python scripts/download_alpaca_options.py --config configs/data_spy_daily.yaml
-python scripts/build_daily_dataset.py --config configs/data_spy_daily.yaml
+.venv/bin/python scripts/run_multiseed_model_family_benchmark.py --config configs/neural_retune_carry_oldbudget.yaml --skip-existing
 ```
 
-If Alpaca historical options coverage is not deep enough for the window you want, replace the fallback path with your own prepared CSV/parquet IV panel and keep the training configs unchanged.
+This runs:
 
-Strict live-data path:
+- 10 baselines
+- vanilla LSTM family
+- attention-pooled LSTM
+- transformer encoder control
+- xLSTM family
+
+on the carry-forward `5-minute seq12/h1` benchmark.
+
+Main report output:
+
+- [artifacts/reports/carry_model_family_retuned_oldbudget.md](artifacts/reports/carry_model_family_retuned_oldbudget.md)
+
+### 2. Run the threshold sweep
 
 ```bash
-python scripts/build_daily_dataset.py --config configs/data_spy_daily_live.yaml
-python scripts/run_baselines.py --config configs/train_baselines_live.yaml
-python scripts/run_lstm.py --config configs/train_lstm_live.yaml
-python scripts/run_backtest_demo.py --config configs/backtest_demo_live.yaml
-python scripts/print_run_summary.py --preset live
+.venv/bin/python scripts/run_model_family_threshold_sweep.py \
+  --benchmark-root artifacts/experiments/carry_model_family_retuned_oldbudget \
+  --backtest-config configs/backtest_execution_5min.yaml \
+  --output-root artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep \
+  --report-title "Retuned Carry Threshold Sweep"
 ```
 
-The live config disables CSV fallback and uses Alpaca historical contracts/bars plus yfinance underlying data.
+Key output:
 
-Hourly live path:
+- [artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/threshold_sweep_summary.md](artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/threshold_sweep_summary.md)
+
+### 3. Run the final winner-vs-all appendix pack
 
 ```bash
-python scripts/build_daily_dataset.py --config configs/data_spy_hourly_live.yaml
-python scripts/run_baselines.py --config configs/train_baselines_hourly_live.yaml
-python scripts/run_lstm.py --config configs/train_lstm_hourly_live.yaml
-python scripts/run_backtest_demo.py --config configs/backtest_demo_hourly_live.yaml
-python scripts/print_run_summary.py --preset hourly-live
+.venv/bin/python scripts/run_best_model_vs_all_baselines_evaluations.py --config configs/best_model_vs_all_baselines_evaluations_carry_retuned_thresholded.yaml
 ```
 
-The hourly live config uses SPY `60m` underlying bars from yfinance and `1Hour` option bars from Alpaca on a shorter practical live window so the free-data path remains runnable.
+This evaluates the final winner `xlstm_oldb_b2_e256` against:
 
-Hourly horizon-1 path:
+- all classical baselines
+- the transformer control
+- the attention-pooled LSTM control
+
+on the same standardized prediction path, using each model’s selected threshold from the completed threshold sweep.
+
+Key output:
+
+- [artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md](artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md)
+
+### 4. Run bootstrap significance for the economic frontier
 
 ```bash
-python scripts/build_daily_dataset.py --config configs/data_spy_hourly_h1_live.yaml
-python scripts/run_baselines.py --config configs/train_baselines_hourly_h1_live.yaml
-python scripts/run_lstm.py --config configs/train_lstm_hourly_h1_live.yaml
-python scripts/run_backtest_demo.py --config configs/backtest_demo_hourly_h1_live.yaml
-python scripts/print_run_summary.py --preset hourly-h1-live
+.venv/bin/python scripts/run_block_bootstrap_strategy_significance.py --config configs/carry_retuned_bootstrap_significance.yaml
 ```
 
-This variant uses a rolling window of `10` hourly IV observations to predict the immediate next hourly IV curve.
+Key output:
 
-Hourly next-day-close path:
+- [artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md](artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md)
+
+### 5. Rebuild thesis assets
 
 ```bash
-python scripts/build_daily_dataset.py --config configs/data_spy_hourly_nextday_live.yaml
-python scripts/run_baselines.py --config configs/train_baselines_hourly_nextday_live.yaml
-python scripts/run_lstm.py --config configs/train_lstm_hourly_nextday_live.yaml
-python scripts/run_backtest_demo.py --config configs/backtest_demo_hourly_nextday_live.yaml
-python scripts/print_run_summary.py --preset hourly-nextday-live
+.venv/bin/python scripts/build_thesis_report_assets.py
 ```
 
-This variant uses a rolling window of `10` hourly IV observations to predict the curve `7` hourly bars ahead, so samples slide one hour at a time instead of only targeting end-of-day points.
+This refreshes the thesis asset pack under [thesis_report_assets/](thesis_report_assets/).
 
-Prepared-panel mode:
+## Supporting SVI Sensitivity
 
-- set `providers.options.type: csv` in [`configs/data_spy_daily.yaml`](/Users/james/Documents/NUS/FYP/code/configs/data_spy_daily.yaml)
-- point `paths.prepared_panel_path` at your CSV/parquet file
-- rerun `scripts/build_daily_dataset.py`
+The dissertation also includes a **carry-plus-SVI sensitivity**. This is a data-layer sensitivity, not the main final benchmark.
 
-## Expected Prepared Panel Schema
-
-The CSV/parquet fallback is expected to look like:
-
-```text
-date, underlying, dte_bucket, iv_mny_m0p15, ..., iv_mny_0p0, ..., iv_mny_0p15
-```
-
-Notes:
-
-- `date` is the observation date
-- `underlying` is the ticker, such as `SPY`
-- `dte_bucket` is the maturity bucket in days
-- each `iv_mny_*` column is the IV value on one fixed moneyness node
-
-The model code does not change if this panel came from Alpaca, another vendor, or an offline file.
-
-## Current Modeling Choices
-
-Baselines:
-
-- `persistence`: random-walk IV curve
-- `ar1_per_grid`: separate AR(1) at each moneyness bucket
-- `factor_ar_var`: PCA factors of the curve, then AR/VAR-style forecasting in factor space
-- `garch_baseline`: GARCH-style ATM shift baseline that pushes the full curve with an ATM-centered forecast
-- `mlp_baseline`: flattened-window MLP
-- `lstm_curve`: simple 1-layer LSTM with a linear head
-
-Current default sequence convention:
-
-- `X`: `[batch, seq_len, features]`
-- `y`: `[batch, grid_size]`
-
-Features in the daily MVP:
-
-- lagged IV curves via the sequence window itself
-- lagged ATM IV
-- lagged underlying returns
-- rolling realized-vol proxy from underlying returns
-- DTE bucket indicator
-
-## Evaluation
-
-Implemented:
-
-- RMSE, MAE, R² overall
-- metrics by moneyness bucket
-- Diebold-Mariano utility for forecast comparison
-- curve examples
-- error-by-bucket plots
-- LSTM training-curve plot
-- toy economic backtest using forecast IV vs current IV, a vega proxy, thresholded signals, and transaction-cost placeholders
-
-## Known Limitations
-
-- The CA report is intraday-first; this repo is daily-first for a stable MVP.
-- Alpaca free historical options coverage is limited, especially for deep history and historical IV reconstruction.
-- Historical IV is reconstructed from option bars with a Black-Scholes-style approximation when direct IV is unavailable.
-- No SVI smoothing is applied yet; the current builder uses interpolation on the fixed moneyness grid.
-- The toy backtest is a signal demo, not an execution-quality simulator.
-- No full no-arbitrage enforcement is implemented yet; only lightweight structural hooks exist in the loss code.
-
-## What To Upgrade Next
-
-- Swap the fixed daily builder for intraday event-time snapshots
-- Add SVI or another arbitrage-aware smile fitter
-- Replace the simplified GARCH-style baseline with richer volatility models if needed
-- Add vega-weighted loss and stronger shape regularization in training
-- Extend from one maturity bucket to multi-bucket or full surface forecasting
-- Add a better options provider with deeper historical chain coverage
-
-## Notebooks and Tests
-
-Notebooks:
-
-- `notebooks/01_data_inspection.ipynb`
-- `notebooks/02_baseline_results.ipynb`
-- `notebooks/03_lstm_results.ipynb`
-
-Tests:
+To rebuild the SVI-backed dataset from local market artifacts:
 
 ```bash
-python -m unittest discover -s tests
+.venv/bin/python scripts/build_svi_dataset_from_local_market_artifacts.py --config configs/data_spy_5min_walkforward_svi_carry.yaml
 ```
-# fyp
+
+Relevant reports:
+
+- [artifacts/reports/svi_full_experiment_suite_summary.md](artifacts/reports/svi_full_experiment_suite_summary.md)
+- [artifacts/reports/carry_vs_svi_model_family_comparison.md](artifacts/reports/carry_vs_svi_model_family_comparison.md)
+
+Main conclusion from the SVI sensitivity:
+
+- SVI improves the structural fit layer
+- it does **not** overturn the downstream model ranking on this dataset
+
+## Key Files for the Dissertation
+
+Primary thesis files:
+
+- [thesis.tex](thesis.tex)
+- [thesis_report_assets/figures/](thesis_report_assets/figures/)
+- [thesis_report_assets/tables/](thesis_report_assets/tables/)
+- [thesis_report_assets/summaries/README_asset_manifest.md](thesis_report_assets/summaries/README_asset_manifest.md)
+
+Core reports cited by the thesis:
+
+- [artifacts/reports/carry_model_family_retuned_oldbudget.md](artifacts/reports/carry_model_family_retuned_oldbudget.md)
+- [artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md](artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md)
+- [artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md](artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md)
+- [artifacts/reports/carry_vs_svi_model_family_comparison.md](artifacts/reports/carry_vs_svi_model_family_comparison.md)
+
+## Data Notes
+
+The repo contains:
+
+- processed datasets used by the thesis under [data/processed/](data/processed/)
+- raw and intermediate local-market artifacts under [data/raw/](data/raw/) where available
+- sample fallback data under [data/samples/](data/samples/)
+
+The final thesis benchmark relies on the processed carry dataset:
+
+- `data/processed/spy_5min_walkforward_h1_dataset_carry_local.npz`
+
+and the SVI sensitivity relies on:
+
+- `data/processed/spy_5min_walkforward_h1_dataset_svi_carry_local.npz`
+
+## Model Families Included
+
+Final thesis benchmark families:
+
+- baselines:
+  - persistence
+  - AR(1) per grid
+  - factor AR/VAR
+  - GARCH-style ATM shift
+  - ElasticNet
+  - MLP
+  - ExtraTrees
+  - histogram gradient boosting
+  - HAR factor
+  - smile-coefficient baseline
+- recurrent controls:
+  - vanilla LSTM
+  - attention-pooled LSTM
+- non-recurrent neural control:
+  - transformer encoder
+- proposed family:
+  - xLSTM
+
+## Notes on Interpretation
+
+This repository contains many experiment layers accumulated during the project. The thesis does **not** treat them all equally.
+
+For grading and submission purposes:
+
+- use [thesis.tex](thesis.tex) as the authoritative report source
+- use the retuned carry benchmark and its attached robustness reports as the primary evidence base
+- treat earlier daily/hourly/pre-retune experiments as supporting development history, not as the final empirical claim
+
+## Limitations of the Repository
+
+- The economic backtest is execution-aware, but it is still a stylized benchmark rather than a full contract-level order-book simulator.
+- Intraday listed-option data remain sparse even after carry-forward.
+- Some older reports and organized views remain in the repo for traceability and are not all thesis-final.
+- Local LaTeX compilation is not configured in this repository; compile [thesis.tex](thesis.tex) in your TeX environment.
+
+## License / Submission Note
+
+This repository is included as part of the FYP submission package and is intended to document:
+
+- code used in the dissertation
+- saved experiment artifacts
+- thesis figures and tables
+- reproducibility entry points for the final benchmark
