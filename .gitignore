@@ -1,0 +1,14 @@
+.env
+.venv/
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.pytest_cache/
+.ipynb_checkpoints/
+artifacts/
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
