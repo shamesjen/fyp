@@ -1,0 +1,14 @@
+feature_name,feature_group,description,why_included,used_in_early_daily_hourly,used_in_final_5min
+iv_grid_values,IV curve,Fixed-grid implied-volatility values across moneyness buckets.,Core target state and primary term-structure snapshot for forecasting the next IV curve.,yes,yes
+atm_iv,Vol level,Nearest-to-ATM implied volatility level.,Anchors the curve around the most liquid region and captures overall vol regime.,yes,yes
+atm_iv_change,Vol level,First difference of ATM implied volatility.,Captures short-horizon vol momentum and mean reversion in the central part of the smile.,no,yes
+underlying_return,Underlying,Simple close-to-close or bar-to-bar return of SPY.,Links IV dynamics to underlying price moves and leverage-effect behavior.,yes,yes
+abs_underlying_return,Underlying,Absolute underlying return.,"Captures shock magnitude irrespective of direction, useful for vol response.",no,yes
+realized_vol,Underlying,Short-window realized volatility from underlying returns.,Provides a local realized-vol proxy to compare implied and realized movement.,yes,yes
+realized_vol_long,Underlying,Long-window realized volatility from underlying returns.,Helps distinguish short-lived bursts from broader volatility regimes.,no,yes
+range_pct,Underlying,Bar high-low range divided by close.,Captures intrabar realized movement not fully described by close-to-close returns.,no,yes
+log_volume,Liquidity,Log-transformed underlying bar volume.,Adds a simple liquidity/activity proxy for intraday information content.,no,yes
+volume_zscore,Liquidity,Rolling z-score of log volume.,Normalizes participation intensity and highlights unusual trading activity.,no,yes
+curve_slope,Curve shape,Difference between left and right edge of the IV curve.,Compactly encodes skew direction and wing asymmetry.,no,yes
+curve_curvature,Curve shape,Wing-average minus center IV.,Captures smile convexity and whether the curve is more U-shaped or flat.,no,yes
+scaled_dte_bucket,Calendar,Maturity bucket scaled by 365.,Retains maturity context while keeping the architecture extensible to multiple buckets later.,yes,yes

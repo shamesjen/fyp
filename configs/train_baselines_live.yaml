@@ -1,0 +1,25 @@
+paths:
+  dataset_path: data/processed/spy_daily_dataset_live.npz
+  output_dir: artifacts/live_baselines
+
+training:
+  random_seed: 7
+  split:
+    mode: expanding
+    train_size: 0.60
+    val_size: 0.20
+    test_size: 0.20
+    n_splits: 1
+
+models:
+  persistence: {}
+  ar1_per_grid: {}
+  factor_ar_var:
+    n_factors: 3
+    mode: var
+  garch_baseline:
+    alpha: 0.10
+    beta: 0.85
+  mlp_baseline:
+    hidden_layer_sizes: [64, 32]
+    max_iter: 400

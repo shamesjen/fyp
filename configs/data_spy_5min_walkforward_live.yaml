@@ -1,0 +1,74 @@
+paths:
+  raw_underlying_path: data/raw/spy_underlying_5min_walkforward_live.csv
+  raw_options_panel_path: data/raw/spy_options_iv_panel_5min_walkforward_live.csv
+  raw_option_contracts_path: data/raw/spy_options_contracts_5min_walkforward_live.csv
+  raw_option_bars_path: data/raw/spy_options_bars_5min_walkforward_live.csv
+  raw_option_rows_path: data/raw/spy_options_rows_5min_walkforward_live.parquet
+  processed_panel_path: data/processed/spy_iv_panel_5min_walkforward_live.parquet
+  dataset_path: data/processed/spy_5min_walkforward_h1_dataset_live.npz
+  dataset_metadata_path: data/processed/spy_5min_walkforward_h1_dataset_live.metadata.json
+  sample_underlying_path: data/samples/spy_underlying_sample.csv
+  sample_panel_path: data/samples/spy_iv_panel_sample.csv
+  prepared_panel_path: data/samples/spy_iv_panel_sample.csv
+
+data:
+  symbol: SPY
+  start_date: 2024-03-01
+  end_date: 2026-03-13
+  seq_len: 12
+  maturity_bucket_days: 30
+  maturity_tolerance_days: 7
+  risk_free_rate: 0.02
+  moneyness_grid: [-0.15, -0.10, -0.05, 0.0, 0.05, 0.10, 0.15]
+
+providers:
+  underlying:
+    type: alpaca
+    interval: 5m
+    bars_limit: 10000
+    request_timeout: 60
+    auto_fallback_to_csv: false
+  options:
+    type: alpaca
+    timeframe: 5Min
+    contract_status: auto
+    strike_moneyness_buffer: 0.03
+    max_unique_expirations: 0
+    strikes_per_grid_point: 1
+    contracts_limit: 250
+    contract_expiration_window_days: 31
+    bars_limit: 10000
+    symbols_per_request: 25
+    request_timeout: 60
+    auto_fallback_to_csv: false
+    trading_base_url: https://paper-api.alpaca.markets
+
+feature_engineering:
+  realized_vol_window: 12
+  realized_vol_long_window: 48
+  include_atm_iv: true
+  include_atm_iv_change: true
+  include_underlying_returns: true
+  include_abs_returns: true
+  include_realized_vol: true
+  include_realized_vol_long: true
+  include_range_pct: true
+  include_log_volume: true
+  include_volume_zscore: true
+  include_curve_slope: true
+  include_curve_curvature: true
+  include_dte: true
+
+supervision:
+  mode: fixed_horizon
+  target_shift: 1
+
+curve_builder:
+  fit_method: legacy_interp
+  min_unique_moneyness_points: 1
+  require_both_sides_of_atm: false
+  max_polynomial_degree: 1
+  ridge_alpha: 0.0
+  iv_clip_multiplier: 1.5
+  allow_low_quality_fallback: true
+  allow_single_point_flat_fill: true

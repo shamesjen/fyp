@@ -1,0 +1,58 @@
+paths:
+  dataset_path: data/processed/spy_5min_walkforward_h1_dataset_svi_local.npz
+  output_dir: artifacts/experiments/multiseed_final_benchmark_overlap_svi/xlstm
+
+training:
+  random_seed: 7
+  batch_size: 64
+  epochs: 40
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  early_stopping_patience: 8
+  early_stopping_min_delta: 0.0
+  loss: huber
+  shuffle_train: true
+
+model:
+  architecture: xlstm
+  embedding_dim: 128
+  num_blocks: 2
+  num_heads: 4
+  proj_factor: 2.0
+  conv1d_kernel_size: 4
+  dropout: 0.10
+  bias: false
+
+hooks:
+  vega_weighted_loss: false
+  smoothness_penalty: 0.05
+  no_arb_penalty: 0.0
+  shape_projection:
+    enabled: true
+    n_components: 3
+
+walkforward:
+  initial_train_size: 17630
+  val_size: 3526
+  test_size: 3526
+  step_size: 1763
+  stitch_mode: frontier
+  save_fold_artifacts: false
+
+backtest:
+  maturity_bucket_days: 30
+  signal_threshold: 0.0015
+  transaction_cost_bps: 1.0
+  holding_period_bars: 1
+  allow_overlapping_positions: true
+  execution:
+    per_trade_exposure: 0.25
+    min_trade_exposure: 0.05
+    max_concurrent_positions: 8
+    gross_exposure_cap: 2.0
+    net_exposure_cap: 1.0
+    commission_bps_per_side: 0.5
+    half_spread_bps_per_side: 4.0
+    slippage_bps_per_side: 2.5
+    impact_bps_per_side: 1.5

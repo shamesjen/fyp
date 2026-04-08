@@ -1,0 +1,132 @@
+paths:
+  standardized_config: configs/standardized_candidates_5min.yaml
+  lstm_walkforward_config: configs/walkforward_lstm_5min_live.yaml
+  baseline_walkforward_config: configs/walkforward_baselines_5min_live.yaml
+  execution_backtest_config: configs/backtest_execution_5min.yaml
+  output_root: artifacts/reports/final_5min_additional_evaluations
+  report_path: artifacts/reports/final_5min_additional_evaluations.md
+
+final_pairs:
+  - group: h1
+    horizon: 1
+    threshold: 0.0015
+    lstm_name: seq84_h1_l2_h256
+    lstm_predictions_path: artifacts/ablations/5min_walkforward/standardized/h1/seq84_h1_l2_h256_standardized_predictions.csv
+    lstm_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h1/seq84_h1_l2_h256
+    mlp_name: mlp_seq84_h1
+    mlp_predictions_path: artifacts/ablations/5min_walkforward/standardized/h1/mlp_seq84_h1_standardized_predictions.csv
+    mlp_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h1/mlp_seq84_h1
+  - group: h12
+    horizon: 12
+    threshold: 0.0025
+    lstm_name: seq48_h12_l3_h256
+    lstm_predictions_path: artifacts/ablations/5min_walkforward/standardized/h12/seq48_h12_l3_h256_standardized_predictions.csv
+    lstm_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h12/seq48_h12_l3_h256
+    mlp_name: mlp_seq48_h12
+    mlp_predictions_path: artifacts/ablations/5min_walkforward/standardized/h12/mlp_seq48_h12_standardized_predictions.csv
+    mlp_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h12/mlp_seq48_h12
+  - group: h24
+    horizon: 24
+    threshold: 0.0030
+    lstm_name: seq84_h24_l3_h256
+    lstm_predictions_path: artifacts/ablations/5min_walkforward/standardized/h24/seq84_h24_l3_h256_standardized_predictions.csv
+    lstm_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h24/seq84_h24_l3_h256
+    mlp_name: mlp_seq84_h24
+    mlp_predictions_path: artifacts/ablations/5min_walkforward/standardized/h24/mlp_seq84_h24_standardized_predictions.csv
+    mlp_backtest_dir: artifacts/ablations/5min_walkforward/standardized/h24/mlp_seq84_h24
+
+regime:
+  method: atm_iv_median
+
+execution_scenarios:
+  - name: base
+    description: Reuse the calibrated execution assumptions from the standardized comparison.
+    overrides: {}
+  - name: wide_spread
+    description: Wider quoted spread, holding other frictions fixed.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+  - name: latency_proxy
+    description: Higher slippage and impact to proxy stale execution and queue loss.
+    overrides:
+      execution:
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5
+  - name: wide_spread_plus_latency
+    description: Combined spread and latency stress.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5
+
+placebo:
+  dataset_path: data/processed/spy_5min_walkforward_seq12_h1.npz
+  horizon: 1
+  threshold: 0.0015
+  lstm:
+    name: seq12_h1_l2_h128_placebo
+    seq_len: 12
+    num_layers: 2
+    hidden_size: 128
+    dropout: 0.10
+  mlp:
+    name: mlp_seq12_h1_placebo
+    seq_len: 12
+    hidden_layer_sizes: [64, 32]
+    max_iter: 400
+  references:
+    lstm_predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+    mlp_predictions_path: artifacts/ablations/5min_walkforward/baselines/h1_seq12/mlp_baseline/stitched_test_predictions.csv
+
+vega_weighted:
+  runs:
+    - name: seq12_h1_l2_h128_vega_weighted
+      dataset_path: data/processed/spy_5min_walkforward_seq12_h1.npz
+      horizon: 1
+      threshold: 0.0015
+      num_layers: 2
+      hidden_size: 128
+      dropout: 0.10
+      reference_predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+    - name: seq84_h1_l2_h256_vega_weighted
+      dataset_path: data/processed/spy_5min_walkforward_seq84_h1.npz
+      horizon: 1
+      threshold: 0.0015
+      num_layers: 2
+      hidden_size: 256
+      dropout: 0.10
+      reference_predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h1_l2_h256/stitched_test_predictions.csv
+
+shape_diagnostics:
+  dataset_path: data/processed/spy_5min_walkforward_seq84_h1.npz
+  horizon: 1
+  threshold: 0.0015
+  variants:
+    - name: base_shape_and_smooth
+      reuse_existing: true
+      predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h1_l2_h256/stitched_test_predictions.csv
+      num_layers: 2
+      hidden_size: 256
+      dropout: 0.10
+      shape_projection_enabled: true
+      smoothness_penalty: 0.05
+    - name: shape_only
+      num_layers: 2
+      hidden_size: 256
+      dropout: 0.10
+      shape_projection_enabled: true
+      smoothness_penalty: 0.0
+    - name: smoothness_only
+      num_layers: 2
+      hidden_size: 256
+      dropout: 0.10
+      shape_projection_enabled: false
+      smoothness_penalty: 0.05
+    - name: unregularized
+      num_layers: 2
+      hidden_size: 256
+      dropout: 0.10
+      shape_projection_enabled: false
+      smoothness_penalty: 0.0

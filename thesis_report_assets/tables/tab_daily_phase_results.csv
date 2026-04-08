@@ -1,0 +1,3 @@
+phase,family,model,rmse,r2,net_pnl,num_trades,notes
+daily_mvp,baseline,ar1_per_grid,0.0241363570094108,0.8854563224872259,,,Best daily baseline by test RMSE. No separate saved baseline backtest artifact was produced in the daily MVP phase.
+daily_mvp,lstm,lstm,0.0292086824774742,0.8322542088494969,0.0090211256730646,35.0,Daily LSTM with next-day IV-curve prediction and toy execution backtest.

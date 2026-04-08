@@ -1,0 +1,30 @@
+paths:
+  dataset_path: data/processed/spy_hourly_h1_walkforward_dataset_live.npz
+  output_dir: artifacts/walkforward_baselines/hourly_h1
+
+training:
+  random_seed: 7
+
+walkforward:
+  initial_train_size: 1227
+  val_size: 409
+  test_size: 409
+  step_size: 409
+
+backtest:
+  maturity_bucket_days: 30
+  signal_threshold: 0.0015
+  transaction_cost_bps: 1.0
+  holding_period_bars: 1
+  allow_overlapping_positions: true
+
+models:
+  factor_ar_var:
+    n_factors: 3
+    mode: var
+  garch_baseline:
+    alpha: 0.10
+    beta: 0.85
+  mlp_baseline:
+    hidden_layer_sizes: [64, 32]
+    max_iter: 400

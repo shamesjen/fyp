@@ -1,0 +1,30 @@
+group,alias_path,source_path,notes
+daily,configs/by_stage/01_daily/data_sample.yaml,configs/data_spy_daily.yaml,Offline-safe daily dataset build
+daily,configs/by_stage/01_daily/data_live.yaml,configs/data_spy_daily_live.yaml,Daily live dataset build
+daily,configs/by_stage/01_daily/train_baselines_sample.yaml,configs/train_baselines.yaml,Daily sample baselines
+daily,configs/by_stage/01_daily/train_baselines_live.yaml,configs/train_baselines_live.yaml,Daily live baselines
+daily,configs/by_stage/01_daily/train_lstm_sample.yaml,configs/train_lstm.yaml,Daily sample LSTM
+daily,configs/by_stage/01_daily/train_lstm_live.yaml,configs/train_lstm_live.yaml,Daily live LSTM
+daily,configs/by_stage/01_daily/backtest_sample.yaml,configs/backtest_demo.yaml,Daily sample backtest
+daily,configs/by_stage/01_daily/backtest_live.yaml,configs/backtest_demo_live.yaml,Daily live backtest
+hourly,configs/by_stage/02_hourly/data_early_h1.yaml,configs/data_spy_hourly_live.yaml,Initial hourly H1 data
+hourly,configs/by_stage/02_hourly/data_h1_seq10.yaml,configs/data_spy_hourly_h1_live.yaml,Hourly H1 seq10 data
+hourly,configs/by_stage/02_hourly/data_h7.yaml,configs/data_spy_hourly_nextday_live.yaml,Hourly +7 rolling data
+hourly,configs/by_stage/02_hourly/data_year_holdout.yaml,configs/data_spy_hourly_h1_year_live.yaml,Year-long hourly holdout data
+hourly,configs/by_stage/02_hourly/train_h1_baselines.yaml,configs/train_baselines_hourly_h1_live.yaml,Hourly H1 baselines
+hourly,configs/by_stage/02_hourly/train_h1_lstm.yaml,configs/train_lstm_hourly_h1_live.yaml,Hourly H1 LSTM
+hourly,configs/by_stage/02_hourly/walkforward_lstm.yaml,configs/walkforward_lstm_hourly_h1_live.yaml,Hourly walk-forward LSTM
+hourly,configs/by_stage/02_hourly/walkforward_baselines.yaml,configs/walkforward_baselines_hourly_h1_live.yaml,Hourly walk-forward baselines
+5min,configs/by_stage/03_5min/data_live.yaml,configs/data_spy_5min_walkforward_live.yaml,Main 5-minute permissive panel
+5min,configs/by_stage/03_5min/data_strict.yaml,configs/data_spy_5min_walkforward_strict.yaml,Strict 5-minute panel variant
+5min,configs/by_stage/03_5min/walkforward_lstm.yaml,configs/walkforward_lstm_5min_live.yaml,Main 5-minute LSTM walk-forward
+5min,configs/by_stage/03_5min/walkforward_xlstm.yaml,configs/walkforward_xlstm_5min_best.yaml,Main 5-minute xLSTM walk-forward
+5min,configs/by_stage/03_5min/walkforward_baselines.yaml,configs/walkforward_baselines_5min_live.yaml,Main 5-minute baselines walk-forward
+5min,configs/by_stage/03_5min/finalists.yaml,configs/finalists_5min.yaml,Frozen 5-minute finalists
+5min,configs/by_stage/03_5min/threshold_sweep.yaml,configs/threshold_sweep_5min.yaml,Finalist threshold sweep
+5min,configs/by_stage/03_5min/standardized_all_refreshed_baselines.yaml,configs/standardized_candidates_5min_all_refreshed_baselines.yaml,Standardized finalist comparison vs refreshed baselines
+5min,configs/by_stage/03_5min/backtest_execution.yaml,configs/backtest_execution_5min.yaml,Execution-aware 5-minute backtest
+final_benchmarks,configs/by_stage/04_final_benchmarks/multiseed_4fold.yaml,configs/multiseed_final_benchmark.yaml,Original 4-fold multi-seed final benchmark
+final_benchmarks,configs/by_stage/04_final_benchmarks/multiseed_overlap_7fold.yaml,configs/multiseed_final_benchmark_overlap.yaml,Definitive overlap-safe 7-fold final benchmark
+final_benchmarks,configs/by_stage/04_final_benchmarks/best_model_vs_all_baselines.yaml,configs/best_model_vs_all_baselines_evaluations.yaml,Best model vs all baselines
+final_benchmarks,configs/by_stage/04_final_benchmarks/final_robustness_suite.yaml,configs/final_5min_additional_evaluations.yaml,Final 5-minute robustness suite

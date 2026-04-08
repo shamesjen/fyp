@@ -1,0 +1,8 @@
+paths:
+  predictions_path: artifacts/live_hourly_lstm/test_predictions.csv
+  output_dir: artifacts/live_hourly_backtest
+
+backtest:
+  signal_threshold: 0.0005
+  transaction_cost_bps: 1.0
+  maturity_bucket_days: 30

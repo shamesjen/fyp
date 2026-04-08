@@ -1,0 +1,33 @@
+paths:
+  dataset_path: data/processed/spy_hourly_nextday_dataset_live.npz
+  output_dir: artifacts/live_hourly_nextday_lstm
+
+training:
+  random_seed: 7
+  split:
+    mode: expanding
+    train_size: 0.60
+    val_size: 0.20
+    test_size: 0.20
+    n_splits: 1
+  batch_size: 16
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  early_stopping_patience: 15
+  early_stopping_min_delta: 0.0
+  loss: huber
+
+model:
+  hidden_size: 32
+  num_layers: 1
+  dropout: 0.10
+
+hooks:
+  vega_weighted_loss: false
+  smoothness_penalty: 0.05
+  no_arb_penalty: 0.0
+  shape_projection:
+    enabled: true
+    n_components: 3

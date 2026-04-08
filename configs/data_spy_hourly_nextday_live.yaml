@@ -1,0 +1,50 @@
+paths:
+  raw_underlying_path: data/raw/spy_underlying_hourly_nextday_live.csv
+  raw_options_panel_path: data/raw/spy_options_iv_panel_hourly_nextday_live.csv
+  processed_panel_path: data/processed/spy_hourly_iv_panel_nextday_live.parquet
+  dataset_path: data/processed/spy_hourly_nextday_dataset_live.npz
+  dataset_metadata_path: data/processed/spy_hourly_nextday_dataset_live.metadata.json
+  sample_underlying_path: data/samples/spy_underlying_sample.csv
+  sample_panel_path: data/samples/spy_iv_panel_sample.csv
+  prepared_panel_path: data/samples/spy_iv_panel_sample.csv
+
+data:
+  symbol: SPY
+  start_date: 2025-12-01
+  end_date: 2026-03-13
+  seq_len: 10
+  maturity_bucket_days: 30
+  maturity_tolerance_days: 7
+  risk_free_rate: 0.02
+  moneyness_grid: [-0.15, -0.10, -0.05, 0.0, 0.05, 0.10, 0.15]
+
+providers:
+  underlying:
+    type: yfinance
+    interval: 60m
+    auto_fallback_to_csv: false
+  options:
+    type: alpaca
+    timeframe: 1Hour
+    contract_status: auto
+    strike_moneyness_buffer: 0.03
+    max_unique_expirations: 0
+    strikes_per_grid_point: 1
+    contracts_limit: 250
+    contract_expiration_window_days: 31
+    bars_limit: 10000
+    symbols_per_request: 25
+    request_timeout: 60
+    auto_fallback_to_csv: false
+    trading_base_url: https://paper-api.alpaca.markets
+
+feature_engineering:
+  realized_vol_window: 24
+  include_atm_iv: true
+  include_underlying_returns: true
+  include_realized_vol: true
+  include_dte: true
+
+supervision:
+  mode: fixed_horizon
+  target_shift: 7

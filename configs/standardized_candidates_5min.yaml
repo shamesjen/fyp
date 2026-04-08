@@ -1,0 +1,73 @@
+groups:
+  - name: h1
+    threshold: 0.0015
+    entries:
+      - name: seq12_h1_l2_h128
+        family: lstm
+        seq_len: 12
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+      - name: seq84_h1_l2_h256
+        family: lstm
+        seq_len: 84
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h1_l2_h256/stitched_test_predictions.csv
+      - name: mlp_seq12_h1
+        family: baseline
+        model: mlp_baseline
+        seq_len: 12
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h1_seq12/mlp_baseline/stitched_test_predictions.csv
+      - name: mlp_seq84_h1
+        family: baseline
+        model: mlp_baseline
+        seq_len: 84
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h1_seq84/mlp_baseline/stitched_test_predictions.csv
+
+  - name: h12
+    threshold: 0.0025
+    entries:
+      - name: seq48_h12_l3_h256
+        family: lstm
+        seq_len: 48
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq48_h12_l3_h256/stitched_test_predictions.csv
+      - name: seq168_h12_l3_h256
+        family: lstm
+        seq_len: 168
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq168_h12_l3_h256/stitched_test_predictions.csv
+      - name: mlp_seq48_h12
+        family: baseline
+        model: mlp_baseline
+        seq_len: 48
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h12_seq48/mlp_baseline/stitched_test_predictions.csv
+      - name: mlp_seq168_h12
+        family: baseline
+        model: mlp_baseline
+        seq_len: 168
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h12_seq168/mlp_baseline/stitched_test_predictions.csv
+
+  - name: h24
+    threshold: 0.0030
+    entries:
+      - name: seq84_h24_l3_h256
+        family: lstm
+        seq_len: 84
+        horizon: 24
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h24_l3_h256/stitched_test_predictions.csv
+      - name: mlp_seq84_h24
+        family: baseline
+        model: mlp_baseline
+        seq_len: 84
+        horizon: 24
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h24_seq84/mlp_baseline/stitched_test_predictions.csv
+      - name: mlp_seq168_h24
+        family: baseline
+        model: mlp_baseline
+        seq_len: 168
+        horizon: 24
+        predictions_path: artifacts/ablations/5min_walkforward/baselines/h24_seq168/mlp_baseline/stitched_test_predictions.csv

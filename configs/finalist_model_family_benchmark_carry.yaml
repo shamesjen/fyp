@@ -1,0 +1,46 @@
+paths:
+  dataset_path: data/processed/spy_5min_walkforward_h1_dataset_carry_local.npz
+  output_root: artifacts/experiments/carry_model_family_finalists
+  report_path: artifacts/reports/carry_model_family_finalists.md
+  base_lstm_config: configs/walkforward_lstm_5min_overlap_carry.yaml
+  base_xlstm_config: configs/walkforward_xlstm_5min_overlap_carry.yaml
+  base_baseline_config: configs/walkforward_baselines_5min_overlap_carry.yaml
+  execution_backtest_config: configs/backtest_execution_5min.yaml
+
+benchmark:
+  seeds: [7]
+  signal_threshold: 0.0015
+  holding_period_bars: 1
+
+lstm_candidates:
+  - name: lstm_l2_h128
+    tag: l2_h128
+    num_layers: 2
+    hidden_size: 128
+  - name: lstm_l2_h256
+    tag: l2_h256
+    num_layers: 2
+    hidden_size: 256
+
+xlstm_candidates:
+  - name: xlstm_b2_e128
+    tag: b2_e128
+    num_blocks: 2
+    embedding_dim: 128
+  - name: xlstm_b2_e256
+    tag: b2_e256
+    num_blocks: 2
+    embedding_dim: 256
+
+baselines:
+  include_models:
+    - persistence
+    - ar1_per_grid
+    - factor_ar_var
+    - garch_baseline
+    - mlp_baseline
+    - elastic_net_baseline
+    - extra_trees_baseline
+    - hist_gradient_boosting_baseline
+    - har_factor_baseline
+    - smile_coefficient_baseline

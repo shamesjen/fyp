@@ -1,0 +1,44 @@
+paths:
+  group_root: artifacts/ablations/5min_walkforward/standardized_all_refreshed_baselines/seq12_h1_all_refreshed_baselines
+  execution_backtest_config: configs/backtest_execution_5min.yaml
+  output_root: artifacts/reports/best_model_vs_all_baselines_evaluations
+  report_path: artifacts/reports/best_model_vs_all_baselines_evaluations.md
+
+best_model:
+  name: seq12_h1_l2_h128
+  family: lstm
+  horizon: 1
+  threshold: 0.0015
+  predictions_path: artifacts/ablations/5min_walkforward/standardized_all_refreshed_baselines/seq12_h1_all_refreshed_baselines/seq12_h1_l2_h128_standardized_predictions.csv
+  backtest_dir: artifacts/ablations/5min_walkforward/standardized_all_refreshed_baselines/seq12_h1_all_refreshed_baselines/seq12_h1_l2_h128
+
+baseline_discovery:
+  root: artifacts/ablations/5min_walkforward/standardized_all_refreshed_baselines/seq12_h1_all_refreshed_baselines
+  prediction_suffix: _standardized_predictions.csv
+  include_prefix: refreshed_
+
+regime:
+  method: atm_iv_median
+
+execution_scenarios:
+  - name: base
+    description: Reuse the calibrated execution assumptions from the standardized comparison.
+    overrides: {}
+  - name: wide_spread
+    description: Wider quoted spread, holding other frictions fixed.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+  - name: latency_proxy
+    description: Higher slippage and impact to proxy stale execution and queue loss.
+    overrides:
+      execution:
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5
+  - name: wide_spread_plus_latency
+    description: Combined spread and latency stress.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5

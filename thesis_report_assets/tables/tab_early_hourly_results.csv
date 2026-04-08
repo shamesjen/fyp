@@ -1,0 +1,4 @@
+setup,rmse,pnl,notes
+hourly_seq24_h1_initial,0.0356511138379573,0.0217916136541191,First stronger hourly next-hour setup using seq_len 24.
+hourly_seq10_h7_overlap_allowed,0.0453012101352214,-0.0232540867534411,Seven-hour horizon formulation with overlapping positions; technically correct but economically weak.
+hourly_seq10_h1_refined,0.0375709347426891,0.0145686940487564,Immediate next-hour forecast with shorter context before the larger year-long study.

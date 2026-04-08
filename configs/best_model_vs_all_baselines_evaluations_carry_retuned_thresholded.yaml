@@ -1,0 +1,72 @@
+paths:
+  execution_backtest_config: configs/backtest_execution_5min.yaml
+  output_root: artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded
+  report_path: artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded.md
+
+report:
+  title: Best xLSTM Vs All Competitors on the Retuned Carry Benchmark
+  comparison_note: >
+    This report compares the selected winner `xlstm_oldb_b2_e256` against the full
+    competitor set on the same standardized retuned-carry prediction window, including
+    classical baselines, the transformer control, and the attention-pooled LSTM control.
+    Statistical tests are computed on the standardized predictions, while economic
+    summaries, regime splits, and execution sensitivity use each model's own best threshold
+    from the completed threshold sweep so that the comparison reflects the final
+    threshold-filtered benchmark rather than a single shared threshold.
+
+best_model:
+  name: xlstm_oldb_b2_e256
+  family: xlstm
+  horizon: 1
+  threshold: 0.005
+  predictions_path: artifacts/experiments/carry_model_family_retuned_oldbudget/standardized/seed_7/xlstm_oldb_b2_e256_standardized_predictions.csv
+  backtest_dir: artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/seed_7/xlstm_oldb_b2_e256/threshold_0p0050
+
+baseline_discovery:
+  root: artifacts/experiments/carry_model_family_retuned_oldbudget/standardized/seed_7
+  prediction_suffix: _standardized_predictions.csv
+  include_names:
+    - persistence
+    - ar1_per_grid
+    - factor_ar_var
+    - garch_baseline
+    - mlp_baseline
+    - elastic_net_baseline
+    - extra_trees_baseline
+    - hist_gradient_boosting_baseline
+    - har_factor_baseline
+    - smile_coefficient_baseline
+    - transformer_oldb_l2_e128_h4
+    - attn_lstm_oldb_l2_h128
+  family_overrides:
+    transformer_oldb_l2_e128_h4: transformer
+    attn_lstm_oldb_l2_h128: lstm
+  best_thresholds_csv: artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep/best_threshold_by_model.csv
+  threshold_backtest_root: artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep
+  threshold_seed: 7
+
+regime:
+  method: atm_iv_median
+
+execution_scenarios:
+  - name: base
+    description: Reuse the calibrated execution assumptions from the standardized comparison.
+    overrides: {}
+  - name: wide_spread
+    description: Wider quoted spread, holding other frictions fixed.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+  - name: latency_proxy
+    description: Higher slippage and impact to proxy stale execution and queue loss.
+    overrides:
+      execution:
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5
+  - name: wide_spread_plus_latency
+    description: Combined spread and latency stress.
+    overrides:
+      execution:
+        half_spread_bps_per_side: 7.0
+        slippage_bps_per_side: 4.5
+        impact_bps_per_side: 3.5

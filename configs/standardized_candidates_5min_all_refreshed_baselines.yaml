@@ -1,0 +1,75 @@
+groups:
+  - name: seq12_h1_all_refreshed_baselines
+    threshold: 0.0015
+    entries:
+      - name: seq12_h1_l2_h128
+        family: lstm
+        seq_len: 12
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq12_h1
+        family: baseline
+        seq_len: 12
+        horizon: 1
+        name_prefix: refreshed_
+
+  - name: seq84_h1_all_refreshed_baselines
+    threshold: 0.0020
+    entries:
+      - name: seq84_h1_l2_h256
+        family: lstm
+        seq_len: 84
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h1_l2_h256/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq84_h1
+        family: baseline
+        seq_len: 84
+        horizon: 1
+        name_prefix: refreshed_
+
+  - name: seq48_h12_all_refreshed_baselines
+    threshold: 0.0025
+    entries:
+      - name: seq48_h12_l3_h256
+        family: lstm
+        seq_len: 48
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq48_h12_l3_h256/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq48_h12
+        family: baseline
+        seq_len: 48
+        horizon: 12
+        name_prefix: refreshed_
+
+  - name: seq168_h12_all_refreshed_baselines
+    threshold: 0.0020
+    entries:
+      - name: seq168_h12_l3_h256
+        family: lstm
+        seq_len: 168
+        horizon: 12
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq168_h12_l3_h256/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq168_h12
+        family: baseline
+        seq_len: 168
+        horizon: 12
+        name_prefix: refreshed_
+
+  - name: seq84_h24_all_refreshed_baselines
+    threshold: 0.0030
+    entries:
+      - name: seq84_h24_l3_h256
+        family: lstm
+        seq_len: 84
+        horizon: 24
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h24_l3_h256/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq84_h24
+        family: baseline
+        seq_len: 84
+        horizon: 24
+        name_prefix: refreshed_

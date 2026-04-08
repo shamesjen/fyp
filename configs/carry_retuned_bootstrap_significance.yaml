@@ -1,0 +1,31 @@
+paths:
+  model_summary_csv: artifacts/reports/carry_model_family_retuned_oldbudget_best_xlstm_vs_all_baselines_thresholded/model_summary.csv
+  threshold_backtest_root: artifacts/reports/carry_model_family_retuned_oldbudget_threshold_sweep
+  output_root: artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance
+  report_path: artifacts/reports/carry_model_family_retuned_oldbudget_bootstrap_significance.md
+
+selection:
+  winner_name: xlstm_oldb_b2_e256
+  seed: 7
+  include_families:
+    - baseline
+    - xlstm
+    - transformer
+  include_names:
+    - xlstm_oldb_b2_e256
+    - transformer_oldb_l2_e128_h4
+    - elastic_net_baseline
+    - mlp_baseline
+    - har_factor_baseline
+    - smile_coefficient_baseline
+    - extra_trees_baseline
+    - hist_gradient_boosting_baseline
+    - factor_ar_var
+    - ar1_per_grid
+    - persistence
+    - garch_baseline
+
+bootstrap:
+  replications: 1000
+  block_length: 78
+  seed: 20260407

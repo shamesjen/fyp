@@ -1,0 +1,40 @@
+finalists:
+  - name: seq12_h1_l2_h128
+    predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+    seq_len: 12
+    horizon: 1
+    num_layers: 2
+    hidden_size: 128
+    rationale: Best overall 5-minute trading PnL and strong forecast quality.
+
+  - name: seq84_h1_l2_h256
+    predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h1_l2_h256/stitched_test_predictions.csv
+    seq_len: 84
+    horizon: 1
+    num_layers: 2
+    hidden_size: 256
+    rationale: Best overall 5-minute forecast RMSE.
+
+  - name: seq48_h12_l3_h256
+    predictions_path: artifacts/ablations/5min_walkforward/lstm/seq48_h12_l3_h256/stitched_test_predictions.csv
+    seq_len: 48
+    horizon: 12
+    num_layers: 3
+    hidden_size: 256
+    rationale: Best 12-bar forecast RMSE with strong economic performance.
+
+  - name: seq168_h12_l3_h256
+    predictions_path: artifacts/ablations/5min_walkforward/lstm/seq168_h12_l3_h256/stitched_test_predictions.csv
+    seq_len: 168
+    horizon: 12
+    num_layers: 3
+    hidden_size: 256
+    rationale: Best 12-bar trading PnL.
+
+  - name: seq84_h24_l3_h256
+    predictions_path: artifacts/ablations/5min_walkforward/lstm/seq84_h24_l3_h256/stitched_test_predictions.csv
+    seq_len: 84
+    horizon: 24
+    num_layers: 3
+    hidden_size: 256
+    rationale: Best 24-bar compromise between RMSE and trading PnL.

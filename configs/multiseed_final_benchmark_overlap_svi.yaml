@@ -1,0 +1,41 @@
+paths:
+  dataset_path: data/processed/spy_5min_walkforward_h1_dataset_svi_local.npz
+  output_root: artifacts/experiments/multiseed_final_benchmark_overlap_svi
+  report_path: artifacts/reports/multiseed_final_benchmark_overlap_svi.md
+  base_lstm_config: configs/walkforward_lstm_5min_overlap_svi.yaml
+  base_xlstm_config: configs/walkforward_xlstm_5min_best_overlap_svi.yaml
+  base_baseline_config: configs/walkforward_baselines_5min_overlap_svi.yaml
+  execution_backtest_config: configs/backtest_execution_5min.yaml
+
+benchmark:
+  seeds: [7, 11]
+  signal_threshold: 0.0015
+  holding_period_bars: 1
+  save_seed_standardized: true
+
+plain_lstm:
+  family: lstm
+  name: plain_lstm_l2_h128
+  tag_prefix: seed
+  output_subdir: plain_lstm
+  architecture: lstm
+  num_layers: 2
+  hidden_size: 128
+
+xlstm:
+  family: xlstm
+  name: xlstm_b2_e128
+  tag_prefix: seed
+  output_subdir: xlstm
+  architecture: xlstm
+  num_blocks: 2
+  embedding_dim: 128
+
+baselines:
+  output_subdir: baselines
+  tag_prefix: seed
+  include_models:
+    - elastic_net_baseline
+    - smile_coefficient_baseline
+    - hist_gradient_boosting_baseline
+    - har_factor_baseline

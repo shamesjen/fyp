@@ -1,0 +1,20 @@
+paths:
+  predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+  output_dir: artifacts/ablations/5min_walkforward/execution_backtests/seq12_h1_l2_h128
+
+backtest:
+  maturity_bucket_days: 30
+  signal_threshold: 0.0015
+  transaction_cost_bps: 0.0
+  holding_period_bars: 1
+  allow_overlapping_positions: true
+  execution:
+    per_trade_exposure: 0.25
+    min_trade_exposure: 0.05
+    max_concurrent_positions: 8
+    gross_exposure_cap: 2.0
+    net_exposure_cap: 1.0
+    commission_bps_per_side: 0.5
+    half_spread_bps_per_side: 4.0
+    slippage_bps_per_side: 2.5
+    impact_bps_per_side: 1.5

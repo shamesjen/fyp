@@ -1,0 +1,1 @@
+../../run_finalist_execution_backtests.py

@@ -1,0 +1,22 @@
+groups:
+  - name: seq12_h1_xlstm_all_refreshed_baselines
+    threshold: 0.0015
+    entries:
+      - name: seq12_h1_l2_h128
+        family: lstm
+        model: seq12_h1_l2_h128
+        seq_len: 12
+        horizon: 1
+        predictions_path: artifacts/ablations/5min_walkforward/lstm/seq12_h1_l2_h128/stitched_test_predictions.csv
+      - name: xlstm_b2_e128_mps
+        family: xlstm
+        model: xlstm_b2_e128_mps
+        seq_len: 12
+        horizon: 1
+        predictions_path: artifacts/experiments/xlstm_5min_best/xlstm_b2_e128_mps/stitched_test_predictions.csv
+    baseline_discovery:
+      - root: artifacts/ablations/5min_walkforward/baselines/refreshed_seq12_h1
+        family: baseline
+        seq_len: 12
+        horizon: 1
+        name_prefix: refreshed_

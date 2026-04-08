@@ -1,0 +1,13 @@
+paths:
+  finalists_config: configs/finalists_5min.yaml
+  backtest_config: configs/backtest_execution_5min.yaml
+  output_root: artifacts/ablations/5min_walkforward/threshold_sweep
+
+thresholds:
+  - 0.0005
+  - 0.0010
+  - 0.0015
+  - 0.0020
+  - 0.0025
+  - 0.0030
+  - 0.0040

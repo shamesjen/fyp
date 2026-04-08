@@ -1,0 +1,55 @@
+paths:
+  dataset_path: data/processed/spy_5min_walkforward_h1_dataset_carry_local.npz
+  output_dir: artifacts/experiments/carry_model_family_suite/baselines
+
+training:
+  random_seed: 7
+
+walkforward:
+  initial_train_size: 17630
+  val_size: 3526
+  test_size: 3526
+  step_size: 1763
+  stitch_mode: frontier
+
+backtest:
+  maturity_bucket_days: 30
+  signal_threshold: 0.0015
+  transaction_cost_bps: 1.0
+  holding_period_bars: 1
+  allow_overlapping_positions: true
+
+models:
+  persistence: {}
+  ar1_per_grid: {}
+  factor_ar_var:
+    n_factors: 3
+    mode: var
+  garch_baseline:
+    alpha: 0.10
+    beta: 0.85
+  mlp_baseline:
+    hidden_layer_sizes: [64, 32]
+    max_iter: 400
+  elastic_net_baseline:
+    alpha: 0.001
+    l1_ratio: 0.5
+    max_iter: 5000
+  extra_trees_baseline:
+    n_estimators: 300
+    min_samples_leaf: 2
+    n_jobs: -1
+  hist_gradient_boosting_baseline:
+    learning_rate: 0.05
+    max_depth: 6
+    max_iter: 300
+    min_samples_leaf: 20
+  har_factor_baseline:
+    n_factors: 3
+    windows: [1, 6, 24]
+    ridge_alpha: 1.0
+    use_exogenous: true
+  smile_coefficient_baseline:
+    degree: 3
+    ridge_alpha: 0.001
+    windows: [1, 6, 24]

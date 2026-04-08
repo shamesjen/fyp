@@ -1,0 +1,10 @@
+paths:
+  predictions_path: artifacts/live_hourly_h1_year_lstm/test_predictions.csv
+  output_dir: artifacts/live_hourly_h1_year_backtest_shuffle_on
+
+backtest:
+  signal_threshold: 0.0015
+  transaction_cost_bps: 1.0
+  maturity_bucket_days: 30
+  holding_period_bars: 1
+  allow_overlapping_positions: true

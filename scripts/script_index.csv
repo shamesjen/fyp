@@ -1,0 +1,25 @@
+group,alias_path,source_path,notes
+data,scripts/by_purpose/01_data/build_dataset.py,scripts/build_daily_dataset.py,Main dataset builder
+data,scripts/by_purpose/01_data/download_underlying.py,scripts/download_underlying_data.py,Underlying downloader
+data,scripts/by_purpose/01_data/download_options.py,scripts/download_alpaca_options.py,Alpaca options downloader
+data,scripts/by_purpose/01_data/build_from_local_raw.py,scripts/build_dataset_from_local_raw.py,Dataset builder from saved raw data
+training,scripts/by_purpose/02_training/run_baselines_single_split.py,scripts/run_baselines.py,Single-split baseline training
+training,scripts/by_purpose/02_training/run_lstm_single_split.py,scripts/run_lstm.py,Single-split LSTM training
+training,scripts/by_purpose/02_training/run_baselines_walkforward.py,scripts/run_baselines_walkforward.py,Walk-forward baseline training
+training,scripts/by_purpose/02_training/run_lstm_walkforward.py,scripts/run_lstm_walkforward.py,Walk-forward LSTM/xLSTM training
+benchmarks,scripts/by_purpose/03_benchmarks/run_5min_grid_ablation.py,scripts/run_5min_walkforward_ablation.py,5-minute grid ablation
+benchmarks,scripts/by_purpose/03_benchmarks/run_hourly_ablation.py,scripts/run_hourly_h1_ablation.py,Hourly H1 ablation
+benchmarks,scripts/by_purpose/03_benchmarks/run_year_capacity_sweep.py,scripts/run_year_long_lstm_capacity_sweep.py,Year-long hourly capacity sweep
+benchmarks,scripts/by_purpose/03_benchmarks/run_standardized_comparison.py,scripts/run_standardized_5min_comparison.py,Standardized common-window comparison
+benchmarks,scripts/by_purpose/03_benchmarks/run_threshold_sweep.py,scripts/run_finalist_threshold_sweep.py,Finalist threshold sweep
+benchmarks,scripts/by_purpose/03_benchmarks/run_finalist_baseline_refresh.py,scripts/run_finalist_baselines_refresh.py,Refresh baselines for finalist datasets
+benchmarks,scripts/by_purpose/03_benchmarks/run_multiseed_benchmark.py,scripts/run_multiseed_final_benchmark.py,Multi-seed final benchmark
+benchmarks,scripts/by_purpose/03_benchmarks/run_best_model_vs_all_baselines.py,scripts/run_best_model_vs_all_baselines_evaluations.py,Best model vs all baselines appendix
+benchmarks,scripts/by_purpose/03_benchmarks/run_final_robustness_suite.py,scripts/run_final_5min_additional_evaluations.py,Final robustness suite
+backtests,scripts/by_purpose/04_backtests/run_demo_backtest.py,scripts/run_backtest_demo.py,Simple demo backtest
+backtests,scripts/by_purpose/04_backtests/run_execution_backtest.py,scripts/run_execution_backtest.py,Execution-aware backtest
+backtests,scripts/by_purpose/04_backtests/run_finalist_execution_backtests.py,scripts/run_finalist_execution_backtests.py,Batch execution backtests for finalists
+backtests,scripts/by_purpose/04_backtests/run_finalist_strategy_analysis.py,scripts/run_finalist_strategy_analysis.py,Finalist tear-sheet analysis
+reporting,scripts/by_purpose/05_reporting/build_thesis_assets.py,scripts/build_thesis_report_assets.py,Build thesis asset pack
+reporting,scripts/by_purpose/05_reporting/print_run_summary.py,scripts/print_run_summary.py,Quick summary printer
+reporting,scripts/by_purpose/05_reporting/fix_thesis_tex.py,scripts/fix_final_report_with_assets.py,Patch thesis tex body

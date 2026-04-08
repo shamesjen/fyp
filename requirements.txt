@@ -1,0 +1,13 @@
+numpy>=1.26
+pandas>=2.2
+scipy>=1.12
+scikit-learn>=1.4
+statsmodels>=0.14
+torch>=2.2
+yfinance>=0.2.54
+matplotlib>=3.8
+python-dotenv>=1.0
+PyYAML>=6.0
+requests>=2.31
+pyarrow>=15.0
+xlstm>=2.0.5

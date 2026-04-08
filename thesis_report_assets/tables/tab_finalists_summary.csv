@@ -1,0 +1,6 @@
+model_name,horizon,seq_len,layers,hidden_size,rmse,raw_net_pnl,tuned_threshold,rationale
+seq12_h1_l2_h128,1,12,2,128,0.050481166690588,41.90098809929452,0.0015,Best overall 5-minute trading PnL and strong forecast quality.
+seq84_h1_l2_h256,1,84,2,256,0.0460908524692058,27.630883699124617,0.002,Best overall 5-minute forecast RMSE.
+seq48_h12_l3_h256,12,48,3,256,0.0468685962259769,28.839325462908597,0.0025,Best 12-bar forecast RMSE with strong economic performance.
+seq168_h12_l3_h256,12,168,3,256,0.0479157865047454,29.41250795491589,0.002,Best 12-bar trading PnL.
+seq84_h24_l3_h256,24,84,3,256,0.0476255230605602,28.456337578572683,0.003,Best 24-bar compromise between RMSE and trading PnL.
